@@ -1,0 +1,84 @@
+{% extends "base.html.twig" %}
+
+{% block title %}User{% endblock %}
+
+{% block content %}
+<main>
+    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10" style="background-color: red;">
+            <div class="container-xl px-4">
+                <div class="page-header-content">
+                    <div class="row align-items-center justify-content-between pt-3">
+                        <div class="col-auto mb-3">
+                            <h1 class="page-header-title">
+                                <div class="page-header-icon">
+                                    <i data-feather="user-plus"></i>
+                                </div>
+                                {{ user.email}}                           
+                            </h1>
+                        </div>
+                        <div class="col-12 col-xl-auto mb-3">
+                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_user_index') }}">
+                                <i class="me-1" data-feather="arrow-left"></i>
+                                Users List                           
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    <div class="container-xl px-4 mt-4">
+        <div class="row">
+            <div class="col-xl-8">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header">Fiche Adhérant
+                    </div>
+                    <div class="card-body">
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-12">
+                                <div class="card-body text-center">
+                                    <div class="small font-italic text-muted mb-4">
+                                        <img src="{{ vich_uploader_asset(user.picture, 'imageFile') }}" alt="Image" class="img-thumbnail" width="200px" height="50%" id="image" />
+                                    </div>
+                                </div>                   
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                                <hr>
+                                <h2 class="small mb-1" for="inputFirstName">Name</h2>
+                                <p class=" mb-1" for="inputFirstName">{{ user.name }}</p>
+                                <hr>  
+                            </div>
+                            <div class="col-md-6">
+                                <hr>
+                                <h2 class="small mb-1" for="inputFirstName">Lastname</h2>
+                                <p class=" mb-1" for="inputFirstName">{{ user.lastname }}</p>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-12">
+                                <hr>
+                                <h2 class="small mb-1" for="inputFirstName">Email <small>({{ user.isActive ? "Active" : "Inactive" }})</small></h2>
+                                <p class=" mb-1" for="inputFirstName">{{ user.email }}</p>
+                                <hr>  
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <a class="btn btn-outline-warning" href="{{ path('app_user_edit',{'id' : user.id}) }}" style="float:left">Edit</a>
+                            <a style="float:right">
+                                {{ include('user/_delete_form.html.twig') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

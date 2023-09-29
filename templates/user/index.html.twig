@@ -1,0 +1,97 @@
+{% extends "dashboard/index.html.twig" %}
+{% block content %}
+    <main>
+        <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10" style="background-color: red;">
+            <div class="container-fluid px-4">
+                <div class="page-header-content">
+                    <div class="row align-items-center justify-content-between pt-3">
+                        <div class="col-auto mb-3">
+                            <h1 class="page-header-title">
+                                <div class="page-header-icon">
+                                    <i data-feather="user"></i>
+                                </div>
+                                Users List                        
+                            </h1>
+                        </div>
+                        <div class="col-12 col-xl-auto mb-3">
+                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_user_new') }}">
+                                <i class="me-1" data-feather="user-plus"></i>
+                                Add User                                                                                    
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main page content-->
+        <div class="container-fluid px-4">
+            <div class="card">
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <tr>
+                                    <th>
+                                        Email                                   
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Lastname
+                                    </th>
+                                    <th>
+                                        Role                                   
+                                    </th>
+                                    {% if app.user.roles['ROLE_ADMIN'] is defined %}
+                                    <th>
+                                        Actions                                   
+                                    </th>
+                                    {% endif %}
+                                </tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-2">
+                                                <img class="avatar-img img-fluid" src="{{ vich_uploader_asset(app.user.picture, 'imageFile') }}" />
+                                            </div>
+                                            {{ user.Email }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ user.Name }}
+                                    </td>
+                                    <td>
+                                        {{ user.Lastname }}
+                                    </td>
+                                    <td>
+                                            {# if role mod style #}
+                                            {% if user.roles['ROLE_ADMIN'] is defined %}
+                                                <span class="badge bg-red-soft text-red">Administrator</span>
+                                            {% else %}
+                                                <span class="badge bg-purple-soft text-blue">User</span>
+                                            {% endif %}
+                                    </td>
+                                    {% if app.user.roles['ROLE_ADMIN'] is defined %}
+                                    <td>
+                                        <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="{{ path('app_user_edit', {'id': user.id}) }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                        <a class="btn btn-datatable btn-icon btn-transparent-dark me-2">
+                                            {{ include('user/_delete_form.html.twig') }}
+                                        </a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

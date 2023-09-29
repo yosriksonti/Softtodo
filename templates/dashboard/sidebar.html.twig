@@ -1,0 +1,43 @@
+<div id="layoutSidenav_nav">
+    <nav class="sidenav shadow-right sidenav-light">
+        <div class="sidenav-menu">
+            <div class="nav accordion" id="accordionSidenav">
+                <!-- Sidenav Link (Alerts)-->
+                <!-- * * Note: * * Visible only on and above the sm breakpoint-->
+                <!-- Sidenav Menu Heading (Core)-->
+                <div class="sidenav-menu-heading">
+                    Dashboard
+                                                
+                </div>
+                <!-- Sidenav Accordion (Dashboard)-->
+                <a class="nav-link" href="{{ path('app_dashboard_index')}}">
+                    <div class="nav-link-icon">
+                        <i data-feather="grid"></i>
+                    </div>
+                    Projects
+                                                                                
+                </a>
+                <!-- Sidenav Accordion (Pages)-->
+                <a class="nav-link" href="{{ path('app_user_index')}}">
+                    <div class="nav-link-icon">
+                        <i data-feather="users"></i>
+                    </div>
+                    Users
+                                                                                
+                </a>
+                
+            </div>
+        </div>
+        <div class="sidenav-footer">
+            <div class="sidenav-footer-content">
+                <div class="sidenav-footer-subtitle">
+                    Connected as:
+                                                
+                </div>
+                <div class="sidenav-footer-title">
+                    {{ app.user.email }}    
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
