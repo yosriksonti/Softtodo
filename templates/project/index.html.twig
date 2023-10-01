@@ -25,11 +25,11 @@
             </div>
         </header>
         <!-- Main page content-->
-        <div class="container-fluid px-4 mt-4" >
+        <div class="container-fluid px-4 mt-2 mb-2" >
             <form class="bg-white">
 
                 <div class="row">
-                    <div class="col-xl-3 card p-0">
+                    <div class="col-xl-3 card p-0 ">
                         
                         <div class="row gx-3">
                             <div class="col-md-12">
@@ -39,11 +39,11 @@
                         </div>
                                
                     </div>
-                    <div class="col-xl-3 card p-0" >
+                    <div class="col-xl-3 card p-0 " >
                         <div class="row gx-3">
                             <div class="col-md-12">
                                 <select class="form-control" placeholder="Project Status" name="status" >
-                                    <option value="" disabled selected>Project Status</option>
+                                    <option value="" selected>Project Status</option>
                                     <option value="Done" {{ status == "Done" ? "selected" : ""}}>Done</option>
                                     <option value="In Progress" {{ status == "In Progress" ? "selected" : ""}}>In Progress</option>
                                     <option value="Blocked" {{ status == "Blocked" ? "selected" : ""}}>Blocked</option>
@@ -53,45 +53,36 @@
                         </div>
                                
                     </div>
-                    <div class="col-xl-4 card p-0">
+                    <div class="col-xl-5 col-10 card p-0   ">
                         <div class="row gx-3">
                             <div class="col-md-12">
                                 <input class="form-control" type="text" placeholder="File name or Url" name="filename" value="{{ filename ? filename : "" }}">
                             </div>
                             
                         </div>
-                               
                     </div>
-                    <div class="col-xl-2 ">
+                    <div class="col-xl-1 col-2 ">
                         <div class="row gx-3">
-                            <div class="col-md-6">
-                                <button class="btn btn-danger" type="submit">
-                                    <i class="fa fa-filter p-1"></i>
+                            <div class="col-12">
+                                <button class="btn btn-danger " type="submit" >
+                                    <i class="fa fa-filter"></i>
                                 </button>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{{ path('app_project_index') }}">
-                                    <button class="btn btn-info" type="button">
-                                        <i class="fa fa-refresh p-1"></i>
-                                    </button>
-                                </a>
-                            </div>
-                            
+                            </div>                          
                         </div>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="container-fluid px-4 mt-4">
+        <div class="container-fluid px-4 ">
             <div class="row" id="paginated-list">
                 {% for project in projects %}
-                <div class="col-xl-3 mb-4">
+                <div class="col-xl-3 mt-1">
                     <div class="card" >
                         <div class="card-body">
-                            <div class="row gx-3 mb-3">
+                            <div class="row gx-3">
                                 <div class="col-md-12">
                                     <div class=" text-center">
-                                        <div class="small font-italic text-muted mb-4">
+                                        <div class="small font-italic text-muted">
                                             <a href="{{ path('app_project_show',{'id' : project.id} ) }}">
                                             <img src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="Image" class="img-fluid"  id="image" 
                                             style="
@@ -145,11 +136,11 @@
                 {% endfor %}
                 
             </div>
-            <hr>
-            <div class="row">
+            <hr class=" mt-4">
+            <div class="row" >
                 <div class="col-3">
-                    <button class="pagination-button" id="prev-button" title="Previous page" aria-label="Previous page" style="float:right" hidden>
-                        &lt;
+                    <button class="pagination-button" id="prev-button" title="Previous page" aria-label="Previous page" style="float:right" >
+                        prev
                     </button>
                 </div>
                 <div class="col-6">
@@ -157,8 +148,8 @@
                     </div>
                 </div>
                 <div class="col-3"> 
-                    <button class="pagination-button" id="next-button" title="Next page" aria-label="Next page" style="float:left" hidden>
-                        &gt;
+                    <button class="pagination-button" id="next-button" title="Next page" aria-label="Next page" style="float:left" >
+                        next
                     </button>
                 </div>
             </div>
