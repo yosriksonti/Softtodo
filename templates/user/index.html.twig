@@ -49,7 +49,7 @@
                                 <div class="col-md-12">
                                     <hr>
                                     <h2 class="small mb-1" for="inputFirstName">Email <small>({{ user.isActive ? "Active" : "Inactive" }})</small>
-                                        {% if user.roles['ROLE_ADMIN'] is defined %}
+                                        {% if user.isAdmin %}
                                             <span class="badge bg-red-soft text-red" style="float:right">Administrator</span>
                                         {% else %}
                                             <span class="badge bg-blue-soft text-blue" style="float:right">User</span>

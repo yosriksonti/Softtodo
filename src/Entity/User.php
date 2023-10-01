@@ -75,6 +75,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     protected $isActive = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isAdmin = false;
     
     /**
      *
@@ -241,6 +246,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): self
     {   
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getIsAdmin(): ?bool
+    {
+        return $this->isAdmin;
+    }
+
+    public function setIsAdmin(bool $isAdmin): self
+    {   
+        $this->isAdmin = $isAdmin;
 
         return $this;
     }

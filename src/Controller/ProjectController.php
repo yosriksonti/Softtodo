@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Project;
+use App\Entity\User;
 use App\Form\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProjectRepository;
@@ -10,6 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
 
 class ProjectController extends AbstractController
@@ -69,15 +74,36 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/back/project/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            if($project->getStatus() != $form->get('status')->getData()) {
+                $project->setStatus($form->get('status')->getData());
+                $admins = $entityManager
+                ->getRepository(User::class)
+                ->findBy(['isAdmin' => true]);
+                $receivers = [];
+                foreach($admins as $admin) {
+                    $receivers[] = $admin->getEmail();
+                }
+                $email = (new TemplatedEmail())
+                ->from(new Address('w311940@gmail.com', 'Softtodo'))
+                ->to(...$receivers)
+                ->subject("Project - ".$project->getTitle()." has been modified")
+                ->html("Project - ".$project->getTitle()." status has been changed to ".$project->getStatus());
+                try {
+                    $mailer->send($email);
+                } catch (TransportExceptionInterface $e) {
+                    
+                }
+            }
             $project->setUpdatedAt(new \DateTime());
             $entityManager->flush();
-
+            
         return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
         }
 

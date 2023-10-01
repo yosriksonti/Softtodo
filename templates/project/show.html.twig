@@ -94,7 +94,7 @@
                                 <hr>  
                             </div>
                         </div>
-                        {% if app.user.roles['ROLE_ADMIN'] is defined %}
+                        {% if app.user.isAdmin == true %}
                         <div class="col-12">
                             <a class="btn btn-outline-danger" href="{{ path('app_project_edit',{'id' : project.id}) }}" style="float:left">Edit Project</a>
                             <a style="float:right">

@@ -58,6 +58,7 @@ class UserController extends AbstractController
             ));
             $user->setCreatedAt(new \DateTime());
             $user->setUpdatedAt(new \DateTime());
+            $user->setIsAdmin(isset($user->getRoles()['ROLE_ADMIN']));
             $userRepository->add($user, true);
             if(!empty($this->user)) {
                 $this->user = $usr;
@@ -111,6 +112,7 @@ class UserController extends AbstractController
                 ));
             }
             $user->setUpdatedAt(new \DateTime());
+            $user->setIsAdmin(isset($user->getRoles()['ROLE_ADMIN']));
             $entityManager->flush();
 
         return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);

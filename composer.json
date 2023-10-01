@@ -29,9 +29,9 @@
         "symfony/twig-bundle": "5.4.*",
         "symfony/validator": "5.4.*",
         "symfony/yaml": "5.4.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0",
         "vich/uploader-bundle": "^1.21"
-    },
-    "require-dev": {
     },
     "config": {
         "allow-plugins": {
@@ -81,5 +81,8 @@
             "allow-contrib": false,
             "require": "5.4.*"
         }
+    },
+    "require-dev": {
+        "symfony/web-profiler-bundle": "5.4.*"
     }
 }

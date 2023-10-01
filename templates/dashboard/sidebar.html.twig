@@ -18,7 +18,7 @@
                                                                                 
                 </a>
                 <!-- Sidenav Accordion (Pages)-->
-                {% if app.user.roles['ROLE_ADMIN'] is defined %}
+                {% if app.user.isAdmin == true %}
                 <a class="nav-link" href="{{ path('app_user_index')}}">
                     <div class="nav-link-icon">
                         <i data-feather="users"></i>

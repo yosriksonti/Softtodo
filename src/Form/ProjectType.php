@@ -40,7 +40,8 @@ class ProjectType extends AbstractType
                     'In Progress' => 'In Progress',
                     'Done' => 'Done',
                     'Blocked' => 'Blocked',
-                ]
+                ],
+                'mapped' => false 
                 
             ])
         ;
