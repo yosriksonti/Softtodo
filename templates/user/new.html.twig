@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     <main>
-        <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10" style="background-color: red;">
+        <header class="page-header page-header-compact page-header-dark bg-gradient ">
+
             <div class="container-xl px-4">
                 <div class="page-header-content">
                     <div class="row align-items-center justify-content-between pt-3">
@@ -10,8 +11,13 @@
                                 <div class="page-header-icon">
                                     <i data-feather="user-plus"></i>
                                 </div>
-                                New User                           
+                                Add User                           
                             </h1>
+                        </div>
+                        <div class="col-12 col-xl-auto mb-3">
+                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_user_index') }}">
+                                Users List                           
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -51,6 +51,7 @@
                         {{ form_errors(form.isActive) }}
                     </div>
                 </div>
+                {% if app.user.id == user.id%}
                 <div class="row gx-3 mb-3">
                     <div class="col-md-12">                                
                         {{ form_row(form.password.first, {'attr':{'required':'true' }})}}  
@@ -59,6 +60,13 @@
                         {{ form_errors(form.password) }}
                     </div>
                 </div>
+                {% else %}
+                <div hidden>
+                                                    
+                        {{ form_widget(form.password, {'attr':{'required':'true' }})}}  
+                </div>
+                {% endif %}
+                {% if app.user.roles['ROLE_ADMIN'] is defined %}
                 <div class="row gx-3 mb-3">
                     <div class="col-md-12">
                         {% for child in form.roles %}
@@ -69,6 +77,11 @@
                         {{ form_errors(form.roles) }}
                     </div>
                 </div>
+                {% else %}
+                <div hidden>
+                    {{ form_widget(form.roles) }}
+                </div>
+                {% endif %}
                 <hr>
                 <button class="fw-500 btn btn-primary">
                         {{ button_label|default('Sauvegarder') }}
@@ -77,5 +90,19 @@
         </div>
     </div>
 </div>
+<script>
+function filePreview(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+                $('#image').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#user_image_imageFile_file").change(function () {
+    filePreview(this);
+});
+</script>
 {{ form_end(form) }}
 

@@ -2,7 +2,6 @@
 {% block content %}
     <main>
         <header class="page-header page-header-compact page-header-dark bg-gradient ">
-
             <div class="container-xl px-4">
                 <div class="page-header-content">
                     <div class="row align-items-center justify-content-between pt-3">
@@ -11,13 +10,12 @@
                                 <div class="page-header-icon">
                                     <i data-feather="edit"></i>
                                 </div>
-                                Edit user                           
+                                Edit Project                           
                             </h1>
                         </div>
                         <div class="col-12 col-xl-auto mb-3">
-                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_user_index') }}">
-                                <i class="me-1" data-feather="arrow-left"></i>
-                                Users List                           
+                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_project_index') }}">
+                                Projects List                           
                             </a>
                         </div>
                     </div>
@@ -25,7 +23,7 @@
             </div>
         </header>
         <div class="container-xl px-4 mt-4">
-            {{ include('user/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+            {{ include('project/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
         </div>
     </main>
 {% endblock %}

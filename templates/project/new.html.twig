@@ -9,23 +9,22 @@
                         <div class="col-auto mb-3">
                             <h1 class="page-header-title">
                                 <div class="page-header-icon">
-                                    <i data-feather="edit"></i>
+                                    <i data-feather="project-plus"></i>
                                 </div>
-                                Edit user                           
+                                Add Project                           
                             </h1>
                         </div>
                         <div class="col-12 col-xl-auto mb-3">
-                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_user_index') }}">
-                                <i class="me-1" data-feather="arrow-left"></i>
-                                Users List                           
+                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_project_index') }}">
+                                Projects List                           
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </header>
+        </header>            
         <div class="container-xl px-4 mt-4">
-            {{ include('user/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+            {{ include('project/_form.html.twig') }}
         </div>
     </main>
 {% endblock %}

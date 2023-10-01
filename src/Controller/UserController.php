@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
-#[Route('/back/user')]
 class UserController extends AbstractController
 {
     private $passwordHasher;
@@ -22,7 +21,7 @@ class UserController extends AbstractController
     {
         $this->passwordHasher = $passwordHasher;
     }
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/back/user', name: 'app_user_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
         
@@ -34,7 +33,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    #[Route('/back/user/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         
@@ -48,7 +47,8 @@ class UserController extends AbstractController
 
             $image = $form->get('image')->getData();
             if($image != null) {
-                $image->setClubid($user->getClubid());
+                $image->setCreatedAt(new \DateTime());
+                $image->setUpdatedAt(new \DateTime());
                 $image->setUserid($user);
                 $entityManager->persist($image);
             }
@@ -56,10 +56,10 @@ class UserController extends AbstractController
                 $user,
                 $form->get('password')->getData()
             ));
-
+            $user->setCreatedAt(new \DateTime());
+            $user->setUpdatedAt(new \DateTime());
             $userRepository->add($user, true);
             if(!empty($this->user)) {
-
                 $this->user = $usr;
                 return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             } else {
@@ -73,7 +73,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    #[Route('/back/user/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user, EntityManagerInterface $entityManager): Response
     {
         
@@ -82,7 +82,15 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
+    public function profile( EntityManagerInterface $entityManager): Response
+    {
+        
+        return $this->render('user/show.html.twig', [
+            'user' => $this->getUser(),
+        ]);
+    }
+    #[Route('/back/user/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         
@@ -102,9 +110,10 @@ class UserController extends AbstractController
                     $form->get('password')->getData()
                 ));
             }
+            $user->setUpdatedAt(new \DateTime());
             $entityManager->flush();
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
@@ -113,7 +122,39 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    #[Route('/profile/edit', name: 'app_user_profile_edit', methods: ['GET', 'POST'])]
+    public function editProfile(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->get('image')->getData();
+            if($image != null) {
+                $image->setUserid($user);
+                $image->setCreatedAt(new \DateTime());
+                $image->setUpdatedAt(new \DateTime());
+                $entityManager->persist($image);
+            }
+            if($form->get('password')->getData()!=null) {
+                $user->setPassword($this->passwordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                ));
+            }
+            $user->setUpdatedAt(new \DateTime());
+            $entityManager->flush();
+
+        return $this->redirectToRoute('app_user_profile', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/back/user/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         

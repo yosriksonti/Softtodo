@@ -1,0 +1,260 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    <main>
+        <header class="page-header page-header-compact page-header-dark bg-gradient ">
+            <div class="container-fluid px-4">
+                <div class="page-header-content">
+                    <div class="row align-items-center justify-content-between pt-3">
+                        <div class="col-auto mb-3">
+                            <h1 class="page-header-title">
+                                <div class="page-header-icon">
+                                    <i data-feather="grid"></i>
+                                </div>
+                                Projects List                        
+                            </h1>
+                        </div>
+                        {% if app.user.roles['ROLE_ADMIN'] is defined %}
+                        <div class="col-12 col-xl-auto mb-3">
+                            <a class="btn btn-sm btn-light text-primary" href="{{ path('app_project_new') }}">
+                                Add Project                                                                                    
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main page content-->
+        <div class="container-fluid px-4 mt-4" >
+            <form class="bg-white">
+
+                <div class="row">
+                    <div class="col-xl-3 card p-0">
+                        
+                        <div class="row gx-3">
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" placeholder="Project Title" name="title" value="{{ title ? title : ""}}">
+                            </div>
+                            
+                        </div>
+                               
+                    </div>
+                    <div class="col-xl-3 card p-0" >
+                        <div class="row gx-3">
+                            <div class="col-md-12">
+                                <select class="form-control" placeholder="Project Status" name="status" >
+                                    <option value="" disabled selected>Project Status</option>
+                                    <option value="Done" {{ status == "Done" ? "selected" : ""}}>Done</option>
+                                    <option value="In Progress" {{ status == "In Progress" ? "selected" : ""}}>In Progress</option>
+                                    <option value="Blocked" {{ status == "Blocked" ? "selected" : ""}}>Blocked</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                               
+                    </div>
+                    <div class="col-xl-4 card p-0">
+                        <div class="row gx-3">
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" placeholder="File name or Url" name="filename" value="{{ filename ? filename : "" }}">
+                            </div>
+                            
+                        </div>
+                               
+                    </div>
+                    <div class="col-xl-2 ">
+                        <div class="row gx-3">
+                            <div class="col-md-6">
+                                <button class="btn btn-danger" type="submit">
+                                    <i class="fa fa-filter p-1"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ path('app_project_index') }}">
+                                    <button class="btn btn-info" type="button">
+                                        <i class="fa fa-refresh p-1"></i>
+                                    </button>
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="container-fluid px-4 mt-4">
+            <div class="row" id="paginated-list">
+                {% for project in projects %}
+                <div class="col-xl-3 mb-4">
+                    <div class="card" >
+                        <div class="card-body">
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-12">
+                                    <div class=" text-center">
+                                        <div class="small font-italic text-muted mb-4">
+                                            <a href="{{ path('app_project_show',{'id' : project.id} ) }}">
+                                            <img src="{{ vich_uploader_asset(project, 'imageFile') }}" alt="Image" class="img-fluid"  id="image" 
+                                            style="
+                                            max-height:150px;
+                                            " />
+                                            </a>
+                                        </div>
+                                    </div>                   
+                                </div>
+                            </div> 
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <a href="{{ path('app_project_show',{'id':project.id}) }}">
+                                <div class="col-md-12">
+                                    <p class=" mb-1" for="inputFirstName"
+                                    style="text-align:center">{{ project.title }}
+                                    </p>
+                                    
+                                </div>
+                                </a>
+                            </div>
+                            <hr>
+                            {% if app.user.roles['ROLE_ADMIN'] is defined %}
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-12"
+                                style="text-align:center">
+                                    <a class="btn btn-outline-danger" href="{{ path('app_project_edit',{'id' : project.id}) }}" >Edit Project</a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if project.status == "Blocked" %}
+                                        <span class="badge bg-red-soft text-red" style="float:right">Blocked</span>
+                                    {% elseif project.status == "In Progress" %}
+                                        <span class="badge bg-purple-soft text-purple" style="float:right">In Progress</span>
+                                    {% elseif project.status == "Done" %}
+                                        <span class="badge bg-blue-soft text-blue" style="float:right">Done</span>
+                                    {% endif %}
+                            <hr>
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-8">
+                                    <small class=" mb-1" for="inputFirstName">Last updated {{ date(project.updatedat).diff(today).days }} days ago</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class=" mb-1" for="inputFirstName">{{ project.nbTasks }} tasks</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <button class="pagination-button" id="prev-button" title="Previous page" aria-label="Previous page" style="float:right">
+                        &lt;
+                    </button>
+                </div>
+                <div class="col-6">
+                    <div id="pagination-numbers">
+                    </div>
+                </div>
+                <div class="col-3"> 
+                    <button class="pagination-button" id="next-button" title="Next page" aria-label="Next page" style="float:left">
+                        &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block scripts %}
+<script>
+
+const paginationNumbers = document.getElementById("pagination-numbers");
+const paginatedList = document.getElementById("paginated-list");
+const listItems = paginatedList.querySelectorAll(".card");
+const nextButton = document.getElementById("next-button");
+const prevButton = document.getElementById("prev-button");
+const paginationLimit = 8;
+const pageCount = Math.ceil(listItems.length / paginationLimit);
+let currentPage;
+
+const appendPageNumber = (index) => {
+  const pageNumber = document.createElement("button");
+  pageNumber.className = "pagination-number";
+  pageNumber.innerHTML = index;
+  pageNumber.setAttribute("page-index", index);
+  pageNumber.setAttribute("aria-label", "Page " + index);
+  paginationNumbers.appendChild(pageNumber);
+};
+const getPaginationNumbers = () => {
+  for (let i = 1; i <= pageCount; i++) {
+    appendPageNumber(i);
+  }
+};
+
+const handleActivePageNumber = () => {
+  document.querySelectorAll(".pagination-number").forEach((button) => {
+    button.classList.remove("active");
+    
+    const pageIndex = Number(button.getAttribute("page-index"));
+    if (pageIndex == currentPage) {
+      button.classList.add("active");
+    }
+  });
+};
+
+const disableButton = (button) => {
+  button.classList.add("disabled");
+  button.setAttribute("disabled", true);
+};
+const enableButton = (button) => {
+  button.classList.remove("disabled");
+  button.removeAttribute("disabled");
+};
+const handlePageButtonsStatus = () => {
+  if (currentPage === 1) {
+    disableButton(prevButton);
+  } else {
+    enableButton(prevButton);
+  }
+  if (pageCount === currentPage) {
+    disableButton(nextButton);
+  } else {
+    enableButton(nextButton);
+  }
+};
+
+const setCurrentPage = (pageNum) => {
+  currentPage = pageNum;
+  handleActivePageNumber();
+  handlePageButtonsStatus();
+  
+  const prevRange = (pageNum - 1) * paginationLimit;
+  const currRange = pageNum * paginationLimit;
+  listItems.forEach((item, index) => {
+    item.classList.add("hidden");
+    if (index >= prevRange && index < currRange) {
+      item.classList.remove("hidden");
+    }
+  });
+};
+window.addEventListener("load", () => {
+  getPaginationNumbers();
+  setCurrentPage(1);
+  prevButton.addEventListener("click", () => {
+    setCurrentPage(currentPage - 1);
+  });
+  nextButton.addEventListener("click", () => {
+    setCurrentPage(currentPage + 1);
+  });
+  document.querySelectorAll(".pagination-number").forEach((button) => {
+    const pageIndex = Number(button.getAttribute("page-index"));
+    if (pageIndex) {
+      button.addEventListener("click", () => {
+        setCurrentPage(pageIndex);
+      });
+    }
+  });
+});
+
+</script>
+{% endblock %}

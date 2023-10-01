@@ -1,21 +1,21 @@
-{% extends "dashboard/index.html.twig" %}
+{% extends "base.html.twig" %}
 {% block content %}
     <main>
-        <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10" style="background-color: red;">
+        <header class="page-header page-header-compact page-header-dark bg-gradient ">
+
             <div class="container-fluid px-4">
                 <div class="page-header-content">
                     <div class="row align-items-center justify-content-between pt-3">
                         <div class="col-auto mb-3">
                             <h1 class="page-header-title">
                                 <div class="page-header-icon">
-                                    <i data-feather="user"></i>
+                                    <i data-feather="users"></i>
                                 </div>
                                 Users List                        
                             </h1>
                         </div>
                         <div class="col-12 col-xl-auto mb-3">
                             <a class="btn btn-sm btn-light text-primary" href="{{ path('app_user_new') }}">
-                                <i class="me-1" data-feather="user-plus"></i>
                                 Add User                                                                                    
                             </a>
                         </div>
@@ -24,74 +24,162 @@
             </div>
         </header>
         <!-- Main page content-->
-        <div class="container-fluid px-4">
-            <div class="card">
-                <div class="card-body">
-                    <table id="datatablesSimple">
-                        <thead>
-                            <tr>
-                                <tr>
-                                    <th>
-                                        Email                                   
-                                    </th>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Lastname
-                                    </th>
-                                    <th>
-                                        Role                                   
-                                    </th>
-                                    {% if app.user.roles['ROLE_ADMIN'] is defined %}
-                                    <th>
-                                        Actions                                   
-                                    </th>
-                                    {% endif %}
-                                </tr>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in users %}
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar me-2">
-                                                <img class="avatar-img img-fluid" src="{{ vich_uploader_asset(app.user.picture, 'imageFile') }}" />
-                                            </div>
-                                            {{ user.Email }}
+        <div class="container-fluid px-4 mt-4">
+            <div class="row" id="paginated-list">
+                {% for user in users %}
+                <div class="col-xl-3 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-12">
+                                    <div class=" text-center">
+                                        <div class="small font-italic text-muted mb-4">
+                                            <a href="{{ path('app_user_show',{'id' : user.id} ) }}">
+                                            <img src="{{ vich_uploader_asset(user.picture, 'imageFile') }}" alt="Image" class="img-fluid"  id="image"
+                                            style="
+                                            max-height:150px;
+                                            "/>
+                                            </a>
                                         </div>
-                                    </td>
-                                    <td>
-                                        {{ user.Name }}
-                                    </td>
-                                    <td>
-                                        {{ user.Lastname }}
-                                    </td>
-                                    <td>
-                                            {# if role mod style #}
-                                            {% if user.roles['ROLE_ADMIN'] is defined %}
-                                                <span class="badge bg-red-soft text-red">Administrator</span>
-                                            {% else %}
-                                                <span class="badge bg-purple-soft text-blue">User</span>
-                                            {% endif %}
-                                    </td>
-                                    {% if app.user.roles['ROLE_ADMIN'] is defined %}
-                                    <td>
-                                        <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="{{ path('app_user_edit', {'id': user.id}) }}">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </a>
-                                        <a class="btn btn-datatable btn-icon btn-transparent-dark me-2">
-                                            {{ include('user/_delete_form.html.twig') }}
-                                        </a>
-                                    </td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                    </div>                   
+                                </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-12">
+                                    <hr>
+                                    <h2 class="small mb-1" for="inputFirstName">Email <small>({{ user.isActive ? "Active" : "Inactive" }})</small>
+                                        {% if user.roles['ROLE_ADMIN'] is defined %}
+                                            <span class="badge bg-red-soft text-red" style="float:right">Administrator</span>
+                                        {% else %}
+                                            <span class="badge bg-blue-soft text-blue" style="float:right">User</span>
+                                        {% endif %}
+                                    </h2>
+                                    <p class=" mb-1" for="inputFirstName">{{ user.email }}</p>
+                                    <hr>  
+                                </div>
+                            </div>
+                            <div class="col-12" style="text-align:center">
+                                <a class="btn btn-outline-danger" href="{{ path('app_user_edit',{'id' : user.id}) }}">
+                                    Edit User
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <button class="pagination-button" id="prev-button" title="Previous page" aria-label="Previous page" style="float:right">
+                        &lt;
+                    </button>
+                </div>
+                <div class="col-6">
+                    <div id="pagination-numbers">
+                    </div>
+                </div>
+                <div class="col-3"> 
+                    <button class="pagination-button" id="next-button" title="Next page" aria-label="Next page" style="float:left">
+                        &gt;
+                    </button>
                 </div>
             </div>
         </div>
     </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+const paginationNumbers = document.getElementById("pagination-numbers");
+const paginatedList = document.getElementById("paginated-list");
+const listItems = paginatedList.querySelectorAll(".card");
+const nextButton = document.getElementById("next-button");
+const prevButton = document.getElementById("prev-button");
+const paginationLimit = 8;
+const pageCount = Math.ceil(listItems.length / paginationLimit);
+let currentPage;
+
+const appendPageNumber = (index) => {
+  const pageNumber = document.createElement("button");
+  pageNumber.className = "pagination-number";
+  pageNumber.innerHTML = index;
+  pageNumber.setAttribute("page-index", index);
+  pageNumber.setAttribute("aria-label", "Page " + index);
+  paginationNumbers.appendChild(pageNumber);
+};
+const getPaginationNumbers = () => {
+  for (let i = 1; i <= pageCount; i++) {
+    appendPageNumber(i);
+  }
+};
+
+const handleActivePageNumber = () => {
+  document.querySelectorAll(".pagination-number").forEach((button) => {
+    button.classList.remove("active");
+    
+    const pageIndex = Number(button.getAttribute("page-index"));
+    if (pageIndex == currentPage) {
+      button.classList.add("active");
+    }
+  });
+};
+
+const disableButton = (button) => {
+  button.classList.add("disabled");
+  button.setAttribute("disabled", true);
+};
+const enableButton = (button) => {
+  button.classList.remove("disabled");
+  button.removeAttribute("disabled");
+};
+const handlePageButtonsStatus = () => {
+  if (currentPage === 1) {
+    disableButton(prevButton);
+  } else {
+    enableButton(prevButton);
+  }
+  if (pageCount === currentPage) {
+    disableButton(nextButton);
+  } else {
+    enableButton(nextButton);
+  }
+};
+
+const setCurrentPage = (pageNum) => {
+  currentPage = pageNum;
+  handleActivePageNumber();
+  handlePageButtonsStatus();
+  
+  const prevRange = (pageNum - 1) * paginationLimit;
+  const currRange = pageNum * paginationLimit;
+  listItems.forEach((item, index) => {
+    item.classList.add("hidden");
+    if (index >= prevRange && index < currRange) {
+      item.classList.remove("hidden");
+    }
+  });
+};
+window.addEventListener("load", () => {
+  getPaginationNumbers();
+  setCurrentPage(1);
+  prevButton.addEventListener("click", () => {
+    setCurrentPage(currentPage - 1);
+  });
+  nextButton.addEventListener("click", () => {
+    setCurrentPage(currentPage + 1);
+  });
+  document.querySelectorAll(".pagination-number").forEach((button) => {
+    const pageIndex = Number(button.getAttribute("page-index"));
+    if (pageIndex) {
+      button.addEventListener("click", () => {
+        setCurrentPage(pageIndex);
+      });
+    }
+  });
+});
+
+</script>
 {% endblock %}

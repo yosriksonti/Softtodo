@@ -10,7 +10,7 @@
                                                 
                 </div>
                 <!-- Sidenav Accordion (Dashboard)-->
-                <a class="nav-link" href="{{ path('app_dashboard_index')}}">
+                <a class="nav-link" href="{{ path('app_project_index')}}">
                     <div class="nav-link-icon">
                         <i data-feather="grid"></i>
                     </div>
@@ -18,6 +18,7 @@
                                                                                 
                 </a>
                 <!-- Sidenav Accordion (Pages)-->
+                {% if app.user.roles['ROLE_ADMIN'] is defined %}
                 <a class="nav-link" href="{{ path('app_user_index')}}">
                     <div class="nav-link-icon">
                         <i data-feather="users"></i>
@@ -25,7 +26,7 @@
                     Users
                                                                                 
                 </a>
-                
+                {% endif %}
             </div>
         </div>
         <div class="sidenav-footer">
