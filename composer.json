@@ -12,6 +12,8 @@
         "doctrine/orm": "^2.14",
         "eckinox/tinymce-bundle": "^0.1.5",
         "liip/imagine-bundle": "^2.11",
+        "scheb/2fa-bundle": "^6.9",
+        "scheb/2fa-email": "^6.9",
         "sensio/framework-extra-bundle": "^6.2",
         "symfony/asset": "5.4.*",
         "symfony/console": "5.4.*",

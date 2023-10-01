@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 
 
@@ -22,29 +23,29 @@ use Doctrine\Common\Collections\Collection;
  * @Vich\Uploadable
  */
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    protected $email;
+    private $email;
     
     /**
      * @ORM\Column(type="string", length=180)
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=180)
      */
-    protected $lastname;
+    private $lastname;
 
     /**
      * @var \DateTime
@@ -63,23 +64,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="json")
      */
-    protected array $roles = [];
+    private array $roles = [];
 
     /**
      * @ORM\Column(type="string")
      * @Assert\Length(min=6, allowEmptyString=true)
      */
     private ?string $password = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $authCode;
     
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $isActive = false;
+    private $isActive = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $isAdmin = false;
+    private $isAdmin = false;
     
     /**
      *
@@ -285,6 +291,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function isEmailAuthEnabled(): bool {
+        return true;
+    }
+
+    public function getEmailAuthRecipient(): string {
+        return $this->email;
+    }
+
+    public function getEmailAuthCode(): string {
+        if(null === $this->authCode) {
+            throw new \LogicException('The auth code was not sent');
+        }
+        return $this->authCode;
+    }
+
+    public function setEmailAuthCode(string $authCode): void {
+        $this->authCode = $authCode;
+    }
+
 
     
 
