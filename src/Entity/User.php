@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive = false;
+    private $isActive = true;
 
     /**
      * @ORM\Column(type="boolean")
